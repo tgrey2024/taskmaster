@@ -1,23 +1,22 @@
 from django.test import TestCase, Client
 from django.utils import timezone
-from .models import LogMessage
+from taskmaster.models import LogMessage
+from django.urls import reverse
 
 class TestLogMessageModel(TestCase):
 
     def setUp(self):
         self.log_message = LogMessage.objects.create(
-            message='Test Message',
-            log_date=timezone.now()
+            message="Test log message"
         )
 
     def test_log_message_creation(self):
-        self.assertTrue(isinstance(self.log_message, LogMessage))
-        self.assertEqual(self.log_message.message, 'Test Message')
+        self.assertEqual(self.log_message.message, "Test log message")
+        self.assertIsNotNone(self.log_message.created_at)
 
     def test_log_message_str(self):
-        expected_object_name = f"'{self.log_message.message}' logged on {timezone.localtime(self.log_message.log_date).strftime('%A, %d %B, %Y at %X')}"
-        self.assertEqual(str(self.log_message), expected_object_name)
-
+        expected_str = f"'Test log message' logged on {self.log_message.created_at.strftime('%A, %d %B, %Y at %X')}"
+        self.assertEqual(str(self.log_message), expected_str)
 
 
 class TestViews(TestCase):
@@ -26,7 +25,5 @@ class TestViews(TestCase):
         self.client = Client()
 
     def test_not_found_url(self):
-        response = self.client.get('/a-url-that-does-not-exist')
-
-        self.assertEquals(response.status_code, 404)
- 
+        response = self.client.get('/non-existent-url/')
+        self.assertEqual(response.status_code, 404)
