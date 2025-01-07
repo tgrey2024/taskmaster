@@ -1,0 +1,12 @@
+body {
+    background-color: #99b7f3;
+}
+
+h1 {
+    color:blue;
+    margin-bottom: 20px;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+}

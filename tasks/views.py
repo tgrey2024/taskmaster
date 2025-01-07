@@ -1,7 +1,18 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from .models import Task
 
-# Create your views here.
+def home(request):
+    """
+    A view to display tasks to do and completed tasks
+    with the tasks due soonest at the top
+    """
 
-def index(request):
-    return HttpResponse("Hello, world. You're at the tasks index.")
+    to_do_tasks = Task.objects.filter(completed=False).order_by('due_date')
+    done_tasks = Task.objects.filter(completed=True).order_by('due_date')
+
+    context = {
+        'to_do_tasks': to_do_tasks,
+        'done_tasks': done_tasks,
+    }
+
+    return render(request, 'tasks/index.html', context)
